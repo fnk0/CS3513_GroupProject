@@ -1,0 +1,14 @@
+{
+  "name": "public",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-materialize": "^0.2.1",
+    "angular-nvd3": "^1.0.9",
+    "angular-route": "^1.5.8",
+    "d3": "v3.5.17",
+    "materialize-css": "^0.97.8"
+  }
+}

@@ -1,0 +1,13 @@
+.chart-card {
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-top: 20px;
+    height: 650px;
+}
+
+.chart-card-500 {
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-top: 20px;
+    height: 500px;
+}

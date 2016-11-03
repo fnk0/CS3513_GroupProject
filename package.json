@@ -1,0 +1,14 @@
+{
+  "name": "CS3613_GroupProject",
+  "version": "1.0.0",
+  "description": "Hello World",
+  "main": "server.js",
+  "author": "Group",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "co": "^4.6.0",
+    "express": "^4.14.0",
+    "q": "^1.4.1"
+  }
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="cs3613" ng-cloak>
+<head>
+    <meta charset="UTF-8">
+    <title>CS 3613</title>
+
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Css -->
+    <link rel="stylesheet" href="node_modules/materialize-css/dist/css/materialize.min.css">
+    <link rel="stylesheet" href="node_modules/nvd3/build/nv.d3.min.css">
+    <link rel="stylesheet" href="css/main.css">
+
+</head>
+<body>
+<nav>
+    <div class="nav-wrapper indigo">
+        <a href="#" class="brand-logo" style="margin-left: 30px;">CS 3513</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+
+            <li><a href="#main">Line</a></li>
+            <li><a href="#bar_stacked">Stacked Bar</a></li>
+            <li><a href="#by_country">By Country</a></li>
+        </ul>
+    </div>
+</nav>
+<div ng-view></div>
+
+
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/angular/angular.min.js"></script>
+<script src="node_modules/materialize-css/dist/js/materialize.min.js"></script>
+<script src="node_modules/angular-materialize/src/angular-materialize.min.js"></script>
+<script src="node_modules/angular-route/angular-route.min.js"></script>
+<script src="node_modules/d3/d3.min.js"></script>
+<script src="node_modules/nvd3/build/nv.d3.js"></script>
+<script src="node_modules/angular-nvd3/dist/angular-nvd3.js"></script>
+<script src="app.js"></script>
+<script src="DataController.js"></script>
+</body>
+</html>
