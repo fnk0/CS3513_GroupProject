@@ -9,7 +9,8 @@
         'ui.materialize'
     ]);
 
-    window._base_url = "http://localhost:3000/api";
+    //window._base_url = "http://localhost:3000/api";
+    window._base_url = "https://cs3513.herokuapp.com/api";
 
     app.config(function ($httpProvider, $routeProvider, $locationProvider) {
         $routeProvider
