@@ -9,8 +9,8 @@
         'ui.materialize'
     ]);
 
-    //window._base_url = "http://localhost:3000/api";
-    window._base_url = "https://cs3513.herokuapp.com/api";
+    window._base_url = "http://localhost:3000/api";
+    //window._base_url = "https://cs3513.herokuapp.com/api";
 
     app.config(function ($httpProvider, $routeProvider, $locationProvider) {
         $routeProvider
@@ -27,6 +27,11 @@
             .when('/by_country', {
                 templateUrl: 'individuals.html',
                 controller: 'IndividualCountryController',
+                controllerAs: 'ctrl'
+            })
+            .when('/reg_by_country', {
+                templateUrl: 'regression_country.html',
+                controller: 'IndividualCountryRegressionController',
                 controllerAs: 'ctrl'
             })
             .otherwise({

@@ -41,7 +41,7 @@
 
             var self = this;
 
-            $scope.onChange = function() {
+            $scope.onChange = function () {
                 $scope.selectedCountry = self.s;
                 console.log($scope.selectedCountry);
                 $scope.selectedData = [];
@@ -52,7 +52,7 @@
                 .success(function (data) {
                     var countryData = data.data;
                     $scope.options = data.options;
-                    countryData.forEach(function(c, i) {
+                    countryData.forEach(function (c, i) {
                         $scope.countries.push(c.key);
                         $scope.data[c.key] = c;
                         //console.log(c.key);
@@ -65,5 +65,40 @@
                     console.log(error);
                 }
             );
+        }]);
+
+    app.controller('IndividualCountryRegressionController', ['$http', '$scope', '$window', '$filter', '$location', '$rootScope', "$httpParamSerializer",
+        function ($http, $scope, $window, $filter, $location, $rootScope, $httpParamSerializer) {
+
+            $scope.selectedCountry = "United States";
+            $scope.selectedData = {};
+            $scope.data = {};
+            $scope.countries = [];
+
+            var self = this;
+
+            $scope.onChange = function () {
+                $scope.selectedCountry = self.s;
+            };
+
+            $scope.fetch = function() {
+                var query = {
+                    country: $scope.selectedCountry,
+                    stepsize: 1,
+                    start: 0,
+                    end: 56,
+                    order: 2
+                };
+
+                $http.get(window._base_url + "/regression?" + $httpParamSerializer(query))
+                    .success(function (data) {
+                        console.log(data);
+                        $scope.options = data.options;
+                        $scope.selectedData = data.data;
+                    }).error(function (error) {
+                        console.log(error);
+                    }
+                );
+            };
         }]);
 })();

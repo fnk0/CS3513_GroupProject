@@ -68,7 +68,7 @@ app.get('/api/line_countries', function (req, res) {
             });
         });
 
-        for(var key in totalData) {
+        for (var key in totalData) {
             if (totalData.hasOwnProperty(key)) {
                 countryData.push({
                     x: parseInt(key),
@@ -239,6 +239,7 @@ app.get('/api/line_individual', function (req, res) {
                 }
             }
         };
+
         res.json({
             options: options,
             data: data
@@ -246,32 +247,92 @@ app.get('/api/line_individual', function (req, res) {
     });
 });
 
-app.get('api/regression', function(req, res) {
+app.get('/api/regression', function (req, res) {
     co(function * () {
+        var data = [];
         var result = yield getNormalizedData();
-	var dataset 
-	results.forEach(function (country, i) {
-		if (country.name == req.query.country) {
-			dataset = country.years;
-		}
-	});
-	
-	var coefficients = models.regress(dataset, req.query.order);
-	var modelData = [];
-	
-	for (var i=req.query.x; i<=req.query.y; i=i+req.query.stepsize){
-		modelData.push({
-			x: i;
-			y: models.polynomial(coefficients, x);
-		});
-	}
-	
-	var data = []
-	data.push({
-		key: req.query.name,
-		values: modelData,
-		area: true
-	});
+        var dataset = [];
+        var country = req.query.country || "United States";
+        result.forEach(function (c, i) {
+            if (c.name == country) {
+                //var years = c.years;
+                //var countryData = [];
+                //years.forEach(function (year, i) {
+                //    if (year.year) {
+                //        var co2 = 0;
+                //        if (year.co2 != "") {
+                //            co2 = year.co2;
+                //        }
+                //        countryData.push({
+                //            x: year.year,
+                //            y: co2
+                //        });
+                //    }
+                //});
+                //data.push({
+                //    key: c.name + " Original Values",
+                //    values: countryData,
+                //    area: true
+                //});
+                dataset = c.years;
+            }
+        });
+
+        var coefficients = models.polynomialRegression(dataset, req.query.order);
+        var modelData = [];
+        console.log(coefficients);
+        console.log(req.query);
+        var stepSize = parseInt(req.query.stepsize || 1);
+        var s = parseInt(req.query.start);
+        var e = parseInt(req.query.end);
+        for (var i = s; i <= e; i += stepSize) {
+            modelData.push({
+                x: i,
+                y: models.polynomial(coefficients, i)
+            });
+        }
+
+        var options = {
+            chart: {
+                type: 'lineChart',
+                height: 450,
+                margin: {
+                    top: 20,
+                    right: 20,
+                    bottom: 45,
+                    left: 45
+                },
+                "showLegend": false,
+                clipEdge: true,
+                duration: 500,
+                stacked: true,
+                xAxis: {
+                    axisLabel: 'Years',
+                    showMaxMin: false,
+                    tickFormat: function (d) {
+                        return d3.format(',f')(d);
+                    }
+                },
+                yAxis: {
+                    axisLabel: 'CO2',
+                    axisLabelDistance: 10,
+                    tickFormat: function (d) {
+                        return d3.format(',.1f')(d);
+                    }
+                }
+            }
+        };
+        data.push({
+            key: country,
+            values: modelData,
+            area: true
+        });
+        res.json({
+            options: options,
+            data: data
+        });
+    }).catch(function(err) {
+        console.log(err.stack);
     });
 });
 
