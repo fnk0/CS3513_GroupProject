@@ -1,8 +1,13 @@
+var polynomial(coefficients, x, i, accumulator){
+	i = i || 0;
+	accumulator = (accumulator||0)*x + coefficients[i];
+	return polynomial(coefficients, x, i+1, accumulator);
+}
 //takes the dataset, and function order,
 //returns a list of coefficents
 
 
-var polynomial = function (dataset, order) {
+var polynomialRegression = function (dataset, order) {
 	//loop over all points and calculate the all the sums.
 	var xsums = [];
 	var ysums = [];
@@ -38,4 +43,4 @@ var polynomial = function (dataset, order) {
 };
 
 
-module.exports = polynomial;
+module.exports = {polynomial, polynomialRegression};
