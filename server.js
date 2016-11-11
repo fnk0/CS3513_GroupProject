@@ -10,9 +10,7 @@ var co = require('co');
 var Q = require('q');
 var app = express();
 var models = require("./models")
-
-var DATA_FILE = path.join(__dirname, 'data.json');
-
+var getNormalizedData = require('./getNormalizedData');
 app.set('port', (process.env.PORT || 3000));
 
 app.use('/', express.static(path.join(__dirname, 'public')));
@@ -24,48 +22,6 @@ app.use(function (req, res, next) {
     res.setHeader('Cache-Control', 'no-cache');
     next();
 });
-
-var getNormalizedData = function () {
-    var deferred = Q.defer();
-    fs.readFile(DATA_FILE, function (err, data) {
-        if (err) {
-            console.error(err);
-            deferred.reject(err);
-        }
-        //res.json(JSON.parse(data));
-        data = JSON.parse(data);
-
-        var result = [];
-
-        // Loop through each country
-        data.forEach(function (country, i) {
-            var myCountry = {};
-            myCountry.years = [];
-            for (var key in country) {
-                // javascript objects have properties that we don't care about
-                // So we check if this property is just from our object
-                if (country.hasOwnProperty(key)) {
-                    if (key == "Country Name") {
-                        myCountry.name = country[key];
-                    }
-                    if (key == "Country Code") {
-                        myCountry.countryCode = country[key];
-                    }
-
-                    if (!isNaN(key)) { // check if key is numeric aKa a year
-                        myCountry.years.push({
-                            year: parseInt(key), // convert this to integer to allow sorting, etc..
-                            co2: country[key]
-                        });
-                    }
-                }
-            }
-            result.push(myCountry);
-        });
-        deferred.resolve(result);
-    });
-    return deferred.promise;
-};
 
 var sortByKey = function (array, key) {
     return array.sort(function (a, b) {

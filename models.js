@@ -6,19 +6,20 @@ var polynomial(coefficients, x, i, accumulator){
 //takes the dataset, and function order,
 //returns a list of coefficents
 
+var matrix = require('matrix-ops');
 
 var polynomialRegression = function (dataset, order) {
 	//loop over all points and calculate the all the sums.
 	var xsums = [];
 	var ysums = [];
 	//reset xsums and ysums to 0
-	for (var j = 0; j < 2 * order; j++){ xsums[j]=0 }
+	for (var j = 0; j <= 2 * order; j++){ xsums[j]=0 }
 	for (var j = 0; j < order+1; j++){ ysums[j]=0 }
 	//and calculate the sums
 	for (var i = dataset.length; i > 0; i--) {
 		var point = dataset[i];
 		if (point.co2 != "") {
-			for (var j = 0; j < 2 * order; j++){
+			for (var j = 0; j <= 2 * order; j++){
 				xsums[j] = xsums[j] + Math.pow(point.year, j);
 			}
 			for (var j=0; j < order+1; j++){
@@ -26,20 +27,31 @@ var polynomialRegression = function (dataset, order) {
 			}
 		}
 	}
-
+    //console.log(xsums);
+    //console.log(ysums);
 
     //plug into the matrix
-
-    //row reduce.
-    var result = []; //return a list of coefficients
-
     var m = [];
-
-    for(var i =0; i < dataset.length; i++) {
-
+    var row = [];
+    for (i = 0; i <= order; i++) {
+        row = [];
+        for (j = 0; j <= order; j++) {
+            row.push(xsums[i + j]);
+        }
+        row.push(ysums[i]);
+        m.push(row);
     }
 
-    return result
+    //console.log(m);
+
+    var reduced = matrix.reducedRowEchelonForm(m);
+    var results = [];
+    for(i = 0; i < reduced.length; i++) {
+        row = reduced[i];
+        results.push(row[row.length -1]);
+    }
+
+    return results;
 };
 
 
