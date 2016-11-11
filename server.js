@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var co = require('co');
 var Q = require('q');
 var app = express();
+var models = require("./models")
 
 var DATA_FILE = path.join(__dirname, 'data.json');
 
@@ -286,6 +287,35 @@ app.get('/api/line_individual', function (req, res) {
             options: options,
             data: data
         });
+    });
+});
+
+app.get('api/regression', function(req, res) {
+    co(function * () {
+        var result = yield getNormalizedData();
+	var dataset 
+	results.forEach(function (country, i) {
+		if (country.name == req.query.country) {
+			dataset = country.years;
+		}
+	});
+	
+	var coefficients = models.regress(dataset, req.query.order);
+	var modelData = [];
+	
+	for (var i=req.query.x; i<=req.query.y; i=i+req.query.stepsize){
+		modelData.push({
+			x: i;
+			y: models.polynomial(coefficients, x);
+		});
+	}
+	
+	var data = []
+	data.push({
+		key: req.query.name,
+		values: modelData,
+		area: true
+	});
     });
 });
 
