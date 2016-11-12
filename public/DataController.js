@@ -81,13 +81,24 @@
                 $scope.selectedCountry = self.s;
             };
 
+            $http.get(window._base_url + "/line_individual")
+                .success(function (data) {
+                    var countryData = data.data;
+                    countryData.forEach(function (c, i) {
+                        $scope.countries.push(c.key);
+                    });
+                }).error(function (error) {
+                    console.log(error);
+                }
+            );
+
             $scope.fetch = function() {
                 var query = {
                     country: $scope.selectedCountry,
                     stepsize: 1,
-                    start: 0,
-                    end: 56,
-                    order: 2
+                    start: 1960,
+                    end: 2015,
+                    order: 46
                 };
 
                 $http.get(window._base_url + "/regression?" + $httpParamSerializer(query))

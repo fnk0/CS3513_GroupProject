@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 var co = require('co');
 var Q = require('q');
 var app = express();
-var models = require("./models")
+var models = require("./models");
 var getNormalizedData = require('./getNormalizedData');
 app.set('port', (process.env.PORT || 3000));
 
@@ -93,7 +93,8 @@ app.get('/api/line_countries', function (req, res) {
                     bottom: 45,
                     left: 45
                 },
-                "showLegend": false,
+                useInteractiveGuideline: true,
+                showLegend: false,
                 clipEdge: true,
                 duration: 500,
                 stacked: true,
@@ -255,25 +256,26 @@ app.get('/api/regression', function (req, res) {
         var country = req.query.country || "United States";
         result.forEach(function (c, i) {
             if (c.name == country) {
-                //var years = c.years;
-                //var countryData = [];
-                //years.forEach(function (year, i) {
-                //    if (year.year) {
-                //        var co2 = 0;
-                //        if (year.co2 != "") {
-                //            co2 = year.co2;
-                //        }
-                //        countryData.push({
-                //            x: year.year,
-                //            y: co2
-                //        });
-                //    }
-                //});
-                //data.push({
-                //    key: c.name + " Original Values",
-                //    values: countryData,
-                //    area: true
-                //});
+                var years = c.years;
+                var countryData = [];
+                years.forEach(function (year, i) {
+                    if (year.year) {
+                        var co2 = 0;
+                        if (year.co2 != "") {
+                            co2 = year.co2;
+                        }
+                        countryData.push({
+                            x: year.year,
+                            y: co2
+                        });
+                    }
+                });
+                data.push({
+                    key: c.name + " Original Values",
+                    color: "#009688",
+                    values: countryData,
+                    area: true
+                });
                 dataset = c.years;
             }
         });
@@ -294,7 +296,7 @@ app.get('/api/regression', function (req, res) {
 
         var options = {
             chart: {
-                type: 'lineChart',
+                type: 'lineWithFocusChart',
                 height: 450,
                 margin: {
                     top: 20,
@@ -302,7 +304,8 @@ app.get('/api/regression', function (req, res) {
                     bottom: 45,
                     left: 45
                 },
-                "showLegend": false,
+                useInteractiveGuideline: true,
+                showLegend: false,
                 clipEdge: true,
                 duration: 500,
                 stacked: true,
@@ -324,6 +327,7 @@ app.get('/api/regression', function (req, res) {
         };
         data.push({
             key: country,
+            color: "#FF9800",
             values: modelData,
             area: true
         });

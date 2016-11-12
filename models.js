@@ -1,3 +1,5 @@
+var matrix = require('matrix-ops');
+
 var polynomial = function (coefficients, x, i, accumulator) {
     i = i || 0;
     //console.log(i);
@@ -10,8 +12,6 @@ var polynomial = function (coefficients, x, i, accumulator) {
 };
 //takes the dataset, and function order,
 //returns a list of coefficents
-
-var matrix = require('matrix-ops');
 
 var polynomialRegression = function (dataset, order) {
     //loop over all points and calculate the all the sums.
@@ -36,10 +36,8 @@ var polynomialRegression = function (dataset, order) {
             }
         }
     }
-    //console.log(xsums);
-    //console.log(ysums);
 
-    //plug into the matrix
+    //Create a matrix with the data
     var m = [];
     var row = [];
     for (i = 0; i <= order; i++) {
@@ -50,8 +48,6 @@ var polynomialRegression = function (dataset, order) {
         row.push(ysums[i]);
         m.push(row);
     }
-
-    //console.log(m);
 
     var reduced = matrix.reducedRowEchelonForm(m);
     var results = [];
