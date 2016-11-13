@@ -6,7 +6,7 @@ var fs = require('fs');
 var path = require('path');
 var co = require('co');
 var Q = require('q');
-var DATA_FILE = path.join(__dirname, 'data.json');
+var DATA_FILE = path.join(__dirname, 'data_1751.json');
 
 module.exports = function() {
     var deferred = Q.defer();
@@ -30,9 +30,6 @@ module.exports = function() {
                 if (country.hasOwnProperty(key)) {
                     if (key == "Country Name") {
                         myCountry.name = country[key];
-                    }
-                    if (key == "Country Code") {
-                        myCountry.countryCode = country[key];
                     }
 
                     if (!isNaN(key)) { // check if key is numeric aKa a year

@@ -1,3 +1,25 @@
 <div class="row card-panel chart-card">
-    <nvd3 options="countriesOptions" data="countriesData"></nvd3>
+    <div class="row">
+        <div input-field class="col s12 m3">
+            <select class="" ng-model="ctrl.order" material-select watch>
+                <option ng-repeat="o in ctrl.orders">{{o}}</option>
+            </select>
+        </div>
+        <div input-field class="col s12 m3">
+            <select class="" ng-model="ctrl.start" material-select>
+                <option ng-repeat="y in ctrl.years">{{y}}</option>
+            </select>
+        </div>
+        <div input-field class="col s12 m3">
+            <select class="" ng-model="ctrl.end" material-select>
+                <option ng-repeat="y in ctrl.years">{{y}}</option>
+            </select>
+        </div>
+        <div class="col s12 m3 right-align">
+            <a class="btn btn-large" href ng-click="fetch()">GO</a>
+        </div>
+    </div>
+    <div class="row">
+        <nvd3 options="options" data="data"></nvd3>
+    </div>
 </div>

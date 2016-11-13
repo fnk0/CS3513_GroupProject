@@ -23,228 +23,11 @@ app.use(function (req, res, next) {
     next();
 });
 
-var sortByKey = function (array, key) {
-    return array.sort(function (a, b) {
-        var x = a[key];
-        var y = b[key];
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-    });
-};
-
 // Normalizes the dataset
 app.get('/api/all_data', function (req, res) {
     co(function * () {
         var result = yield getNormalizedData();
         res.json(result);
-    });
-});
-
-app.get('/api/line_countries', function (req, res) {
-    co(function * () {
-        var result = yield getNormalizedData();
-        var data = [];
-        var totalData = {};
-        var countryData = [];
-        result.forEach(function (country, i) {
-            var years = country.years;
-
-            years.forEach(function (year, i) {
-                if (year.year) {
-                    var d = totalData["" + year.year];
-                    var co2 = 0;
-                    if (year.co2 != "") {
-                        co2 = year.co2;
-                    }
-                    if (d) {
-                        d.co2 = d.co2 + co2;
-                    } else {
-                        d = {
-                            year: year.year,
-                            co2: co2
-                        };
-                    }
-                    totalData["" + year.year] = d;
-                }
-            });
-        });
-
-        for (var key in totalData) {
-            if (totalData.hasOwnProperty(key)) {
-                countryData.push({
-                    x: parseInt(key),
-                    y: totalData[key].co2
-                })
-            }
-        }
-
-        data.push({
-            key: "CO2",
-            values: countryData,
-            area: true
-        });
-
-        var options = {
-            chart: {
-                type: 'lineChart',
-                height: 600,
-                margin: {
-                    top: 20,
-                    right: 20,
-                    bottom: 45,
-                    left: 45
-                },
-                useInteractiveGuideline: true,
-                showLegend: false,
-                clipEdge: true,
-                duration: 500,
-                stacked: true,
-                xAxis: {
-                    axisLabel: 'Years',
-                    showMaxMin: false,
-                    tickFormat: function (d) {
-                        return d3.format(',f')(d);
-                    }
-                },
-                yAxis: {
-                    axisLabel: 'CO2',
-                    axisLabelDistance: -20,
-                    tickFormat: function (d) {
-                        return d3.format(',.1f')(d);
-                    }
-                }
-            }
-        };
-        res.json({
-            options: options,
-            data: data
-        });
-    });
-});
-
-app.get('/api/bar_countries', function (req, res) {
-    co(function * () {
-        var result = yield getNormalizedData();
-        var data = [];
-        result.forEach(function (country, i) {
-
-            var years = country.years;
-            var countryData = [];
-            years.forEach(function (year, i) {
-                if (year.year) {
-                    var co2 = 0;
-                    if (year.co2 != "") {
-                        co2 = year.co2;
-                    }
-                    countryData.push({
-                        x: year.year,
-                        y: co2
-                    });
-                }
-            });
-            data.push({
-                key: country.name,
-                values: countryData
-            });
-        });
-
-        var options = {
-            chart: {
-                type: 'multiBarChart',
-                height: 600,
-                margin: {
-                    top: 20,
-                    right: 20,
-                    bottom: 45,
-                    left: 45
-                },
-                "showLegend": false,
-                clipEdge: true,
-                duration: 500,
-                stacked: true,
-                xAxis: {
-                    axisLabel: 'Years',
-                    showMaxMin: false,
-                    tickFormat: function (d) {
-                        return d3.format(',f')(d);
-                    }
-                },
-                yAxis: {
-                    axisLabel: 'CO2',
-                    axisLabelDistance: 10,
-                    tickFormat: function (d) {
-                        return d3.format(',.1f')(d);
-                    }
-                }
-            }
-        };
-        res.json({
-            options: options,
-            data: data
-        });
-    });
-});
-
-app.get('/api/line_individual', function (req, res) {
-    co(function * () {
-        var result = yield getNormalizedData();
-        var data = [];
-        result.forEach(function (country, i) {
-            var years = country.years;
-            var countryData = [];
-            years.forEach(function (year, i) {
-                if (year.year) {
-                    var co2 = 0;
-                    if (year.co2 != "") {
-                        co2 = year.co2;
-                    }
-                    countryData.push({
-                        x: year.year,
-                        y: co2
-                    });
-                }
-            });
-            data.push({
-                key: country.name,
-                values: countryData,
-                area: true
-            });
-        });
-
-        var options = {
-            chart: {
-                type: 'lineChart',
-                height: 450,
-                margin: {
-                    top: 20,
-                    right: 20,
-                    bottom: 45,
-                    left: 45
-                },
-                "showLegend": false,
-                clipEdge: true,
-                duration: 500,
-                stacked: true,
-                xAxis: {
-                    axisLabel: 'Years',
-                    showMaxMin: false,
-                    tickFormat: function (d) {
-                        return d3.format(',f')(d);
-                    }
-                },
-                yAxis: {
-                    axisLabel: 'CO2',
-                    axisLabelDistance: 10,
-                    tickFormat: function (d) {
-                        return d3.format(',.1f')(d);
-                    }
-                }
-            }
-        };
-
-        res.json({
-            options: options,
-            data: data
-        });
     });
 });
 
@@ -254,12 +37,16 @@ app.get('/api/regression', function (req, res) {
         var result = yield getNormalizedData();
         var dataset = [];
         var country = req.query.country || "United States";
+        var stepSize = parseInt(req.query.stepsize || 1);
+        var s = parseInt(req.query.start);
+        var e = parseInt(req.query.end);
+
         result.forEach(function (c, i) {
             if (c.name == country) {
                 var years = c.years;
                 var countryData = [];
                 years.forEach(function (year, i) {
-                    if (year.year) {
+                    if (year.year && year.year >= s && year.year <= e) {
                         var co2 = 0;
                         if (year.co2 != "") {
                             co2 = year.co2;
@@ -271,7 +58,7 @@ app.get('/api/regression', function (req, res) {
                     }
                 });
                 data.push({
-                    key: c.name + " Original Values",
+                    key: "Original Values",
                     color: "#009688",
                     values: countryData,
                     area: true
@@ -282,11 +69,6 @@ app.get('/api/regression', function (req, res) {
 
         var coefficients = models.polynomialRegression(dataset, req.query.order);
         var modelData = [];
-        console.log(coefficients);
-        console.log(req.query);
-        var stepSize = parseInt(req.query.stepsize || 1);
-        var s = parseInt(req.query.start);
-        var e = parseInt(req.query.end);
         for (var i = s; i <= e; i += stepSize) {
             modelData.push({
                 x: i,
@@ -302,10 +84,9 @@ app.get('/api/regression', function (req, res) {
                     top: 20,
                     right: 20,
                     bottom: 45,
-                    left: 45
+                    left: 80
                 },
                 useInteractiveGuideline: true,
-                showLegend: false,
                 clipEdge: true,
                 duration: 500,
                 stacked: true,
@@ -313,20 +94,21 @@ app.get('/api/regression', function (req, res) {
                     axisLabel: 'Years',
                     showMaxMin: false,
                     tickFormat: function (d) {
-                        return d3.format(',f')(d);
+                        return d3.format('.f')(d);
                     }
                 },
                 yAxis: {
-                    axisLabel: 'CO2',
-                    axisLabelDistance: 10,
+                    axisLabel: 'million metric tons of carbon',
+                    showMaxMin: false,
+                    axisLabelDistance: 5,
                     tickFormat: function (d) {
-                        return d3.format(',.1f')(d);
+                        return d3.format('.1f')(d);
                     }
                 }
             }
         };
         data.push({
-            key: country,
+            key: "Regression",
             color: "#FF9800",
             values: modelData,
             area: true

@@ -14,28 +14,13 @@
 
     app.config(function ($httpProvider, $routeProvider, $locationProvider) {
         $routeProvider
-            .when('/main', {
-                templateUrl: 'total.html',
+            .when('/', {
+                templateUrl: 'main.html',
                 controller: 'DataController',
                 controllerAs: 'ctrl'
             })
-            .when('/bar_stacked', {
-                templateUrl: 'main.html',
-                controller: 'BarStackedDataController',
-                controllerAs: 'ctrl'
-            })
-            .when('/by_country', {
-                templateUrl: 'individuals.html',
-                controller: 'IndividualCountryController',
-                controllerAs: 'ctrl'
-            })
-            .when('/reg_by_country', {
-                templateUrl: 'regression_country.html',
-                controller: 'IndividualCountryRegressionController',
-                controllerAs: 'ctrl'
-            })
             .otherwise({
-                redirectTo: '/main'
+                redirectTo: '/'
             });
     });
 

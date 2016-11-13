@@ -17,7 +17,7 @@ var test = function() {
         var result = yield getNormalizedData();
         result.forEach(function(c, i) {
             if (c.name == country) {
-                var res = pol.polynomialRegression(c.years, 2);
+                var res = pol.polynomialRegression(c.years, 10);
                 console.log(res);
             }
         });
