@@ -1,5 +1,11 @@
 var matrix = require('matrix-ops');
 
+var average = function(dataset) {
+	return dataset.reduce(function(average, value){
+		return ((average||0)+value)/2
+	}
+}
+
 var polynomial = function (coefficients, x, i, accumulator) {
     i = i || 0;
     //console.log(i);
@@ -85,5 +91,5 @@ var getError = function (original, estimated) {
 };
 
 module.exports = {
-    polynomial, polynomialRegression, getError, filter
+    polynomial, polynomialRegression, average, getError, filter
 };
