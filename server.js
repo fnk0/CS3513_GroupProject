@@ -148,6 +148,7 @@ app.get('/api/regression_table', function (req, res) {
         var e = parseInt(req.query.end) || 2011;
         var st = parseInt(req.query.st) || 1751;
         var et = parseInt(req.query.et) || 2011;
+        var order = parseInt(req.query.order) || 2;
 
         var originalData = [];
 
@@ -176,7 +177,7 @@ app.get('/api/regression_table', function (req, res) {
             }
         });
 
-        var coefficients = models.polynomialRegression(dataset, req.query.order);
+        var coefficients = models.polynomialRegression(filter(dataset, st, et), order);
         var modelData = [];
         for (var i = s; i <= e; i += stepSize) {
             modelData.push({
