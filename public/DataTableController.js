@@ -1,5 +1,5 @@
 /**
- * Created by marcus on 11/2/16.
+ * Created by marcus on 11/18/16.
  */
 
 (function () {
@@ -21,16 +21,14 @@
                 self.years.push(i);
             }
 
-            self.order = 1;
             self.start = 1751;
             self.end = 2011;
             self.st = 1751;
             self.et = 2011;
 
             $scope.fetchData = function() {
-                $scope.fetch(self.start, self.end, self.st, self.et, self.order, function(data, options) {
+                $scope.fetch(self.start, self.end, self.st, self.et, self.order, function(data) {
                     $scope.data = data;
-                    $scope.options = options;
                 });
             };
 
@@ -40,28 +38,21 @@
                     stepsize: 1,
                     start: start,
                     end: end,
-                    order: order,
                     st: st,
                     et: et
                 };
 
-                $http.get(window._base_url + "/regression?" + $httpParamSerializer(query))
+                $http.get(window._base_url + "/regression_table?" + $httpParamSerializer(query))
                     .success(function (data) {
-                        callback(data.data, data.options);
+                        callback(data.data);
                     }).error(function (error) {
                         console.log(error);
                     }
                 );
             };
 
-            $scope.fetch(self.start, self.end, self.st, self.et, self.order, function(data, options) {
-               $scope.data = data;
-                $scope.options = options;
-            });
-
-            $scope.fetch(self.start, self.end, 1900, 1945, self.order, function(data, options) {
-                $scope.data2 = data;
-                $scope.options = options;
+            $scope.fetch(self.start, self.end, self.st, self.et, self.order, function(data) {
+                $scope.data = data;
             });
         }]);
 })();

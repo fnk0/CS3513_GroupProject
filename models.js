@@ -76,12 +76,15 @@ var polynomialRegression = function (dataset, order) {
     return results;
 };
 
-var getError = function (original, estimated) {
+var getError = function (original, estimated, absolute) {
     var errors = [];
 
     original.forEach(function(val, index) {
         var es = estimated[index].y;
-        var err = Math.abs((val.y - es) / val.y);
+        var err = Math.abs((val.y - es));
+        if (absolute) {
+            err = (err / val.y) * 100;
+        }
         errors.push({
             x: val.x,
             y: err
@@ -90,6 +93,23 @@ var getError = function (original, estimated) {
     return errors;
 };
 
+var getDatapoints = function(dataset, s, e) {
+    var data = [];
+    dataset.forEach(function (year, i) {
+        if (year.year && year.year >= s && year.year <= e) {
+            var co2 = 0;
+            if (year.co2 != "") {
+                co2 = year.co2;
+            }
+            data.push({
+                x: year.year,
+                y: co2
+            });
+        }
+    });
+    return data;
+};
+
 module.exports = {
-    polynomial, polynomialRegression, average, getError, filter
+    polynomial, polynomialRegression, average, getError, filter, getDatapoints
 };
