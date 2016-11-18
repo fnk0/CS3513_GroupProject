@@ -48,12 +48,12 @@
             };
             $scope.fetch(self.start, self.end, self.st, self.et, self.order, function(data, options) {
                $scope.data = data;
-                $scope.options = data.options;
+                $scope.options = options;
             });
 
             $scope.fetch(self.start, self.end, 1900, 1945, self.order, function(data, options) {
                 $scope.data2 = data;
-                $scope.options = data.options;
+                $scope.options = options;
             });
         }]);
 })();

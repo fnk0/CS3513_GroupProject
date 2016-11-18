@@ -74,8 +74,8 @@
       <file leaf-file-name="DataController.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/DataController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.47802198">
-              <caret line="44" column="43" selection-start-line="44" selection-start-column="43" selection-end-line="44" selection-end-column="43" />
+            <state vertical-scroll-proportion="0.739011">
+              <caret line="54" column="36" selection-start-line="54" selection-start-column="36" selection-end-line="54" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -340,7 +340,13 @@
       <option name="project" value="LOCAL" />
       <updated>1479504103431</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="* more graphs!">
+      <created>1479504412195</created>
+      <option name="number" value="00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1479504412195</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TodoView">
@@ -822,8 +828,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/DataController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.47802198">
-          <caret line="44" column="43" selection-start-line="44" selection-start-column="43" selection-end-line="44" selection-end-column="43" />
+        <state vertical-scroll-proportion="0.739011">
+          <caret line="54" column="36" selection-start-line="54" selection-start-column="36" selection-end-line="54" selection-end-column="36" />
           <folding />
         </state>
       </provider>
