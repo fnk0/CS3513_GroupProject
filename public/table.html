@@ -1,7 +1,7 @@
 <div class="row card-panel">
     <div class="row">
 
-        <div input-field class="col s12 m2">
+        <div input-field class="col s12 m2 offset-m1">
             <div class="row">
                 <h6>Start Training Year</h6>
             </div>
@@ -22,16 +22,6 @@
             </div>
         </div>
 
-        <div input-field class="col s12 m2">
-            <div class="row">
-                <h6>Order</h6>
-            </div>
-            <div class="row">
-                <select class="" ng-model="ctrl.order" material-select watch
-                        ng-options="order as order for order in ctrl.orders">
-                </select>
-            </div>
-        </div>
         <div input-field class="col s12 m2">
             <div class="row">
                 <h6>Start Year</h6>
@@ -60,29 +50,19 @@
 
 <div class="row card-panel">
 
-    <table>
+    <table class="striped centered">
         <thead>
         <tr>
-            <th ng-repeat="p in data">{{ p.order }}</th>
+            <th>Year</th>
+            <th ng-repeat="p in ctrl.orders">Order {{ p }}</th>
         </tr>
         </thead>
 
         <tbody>
 
-        <tr>
-            <td>Alvin</td>
-            <td>Eclair</td>
-            <td>$0.87</td>
-        </tr>
-        <tr>
-            <td>Alan</td>
-            <td>Jellybean</td>
-            <td>$3.76</td>
-        </tr>
-        <tr>
-            <td>Jonathan</td>
-            <td>Lollipop</td>
-            <td>$7.00</td>
+        <tr ng-repeat="point in data">
+            <td>{{point.year}}</td>
+            <td ng-repeat="p in point.data"> {{ p.v | number: 4}} %</td>
         </tr>
         </tbody>
     </table>

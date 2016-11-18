@@ -6,18 +6,16 @@
 
     var app = angular.module('cs3613');
 
-    app.controller('DataController', ['$http', '$scope', '$window', '$filter', '$location', '$rootScope', '$httpParamSerializer',
+    app.controller('DataTableController', ['$http', '$scope', '$window', '$filter', '$location', '$rootScope', '$httpParamSerializer',
         function ($http, $scope, $window, $filter, $location, $rootScope, $httpParamSerializer) {
 
             var self = this;
             self.chartData = [];
-            self.orders = [];
             self.years = [];
-            for(var i = 1; i < 46; i++) {
-                self.orders.push(i);
-            }
 
-            for(i = 1751; i < 2012; i++) {
+            self.orders = ["1", "2", "4", "8", "16"];
+
+            for(var i = 1751; i < 2012; i++) {
                 self.years.push(i);
             }
 
@@ -44,7 +42,15 @@
 
                 $http.get(window._base_url + "/regression_table?" + $httpParamSerializer(query))
                     .success(function (data) {
-                        callback(data.data);
+                        var result = [];
+                        for(var key in data.data) {
+                            if (data.data.hasOwnProperty(key)) {
+                                if (parseInt(key) % 10 == 1) {
+                                    result.push(data.data[key]);
+                                }
+                            }
+                        }
+                        callback(result);
                     }).error(function (error) {
                         console.log(error);
                     }

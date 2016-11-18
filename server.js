@@ -140,7 +140,7 @@ app.get('/api/regression', function (req, res) {
 app.get('/api/regression_table', function (req, res) {
     co(function * () {
         var data = [];
-        var result = yield getNormalizedData();
+        var resultData = yield getNormalizedData();
         var dataset = [];
         var country = req.query.country || "United States";
         var stepSize = parseInt(req.query.stepsize || 1);
@@ -151,14 +151,14 @@ app.get('/api/regression_table', function (req, res) {
 
         var originalData = [];
 
-        result.forEach(function (c, i) {
+        resultData.forEach(function (c, i) {
             if (c.name == country) {
                 dataset = c.years;
                 originalData = models.getDatapoints(dataset, start, end);
             }
         });
 
-        for(var o = 1; o < 33; o *= 2) {
+        for(var o = 1; o < 17; o *= 2) {
             var coefficients = models.polynomialRegression(models.filter(dataset, trainingStart, trainingEnd), o);
             var modelData = [];
             for (var i = start; i <= end; i += stepSize) {
@@ -167,14 +167,33 @@ app.get('/api/regression_table', function (req, res) {
                     y: models.polynomial(coefficients, i)
                 });
             }
-            var errors = models.getError(originalData, modelData);
+            var errors = models.getError(originalData, modelData, true);
             data.push({
                 order: o,
                 values: errors
             });
         }
+
+        var result = {};
+        data.forEach(function(v, i) {
+            var values = v.values;
+            values.forEach(function(iv, j) {
+                var year = iv.x;
+                var point = result[year] || {};
+                var data = point.data || [];
+                data.push({
+                    o: v.order,
+                    v: iv.y
+                });
+                result[year] = {
+                    year: year,
+                    data: data
+                };
+            });
+        });
+
         res.json({
-            data: data
+            data: result
         });
     }).catch(function(err) {
         console.log(err.stack);

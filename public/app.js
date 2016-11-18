@@ -19,6 +19,11 @@
                 controller: 'DataController',
                 controllerAs: 'ctrl'
             })
+            .when('/table', {
+                templateUrl: 'table.html',
+                controller: 'DataTableController',
+                controllerAs: 'ctrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });
