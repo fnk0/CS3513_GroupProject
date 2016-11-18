@@ -38,20 +38,24 @@ app.get('/api/regression', function (req, res) {
         var dataset = [];
         var country = req.query.country || "United States";
         var stepSize = parseInt(req.query.stepsize || 1);
-        var s = parseInt(req.query.start);
-        var e = parseInt(req.query.end);
+        var s = parseInt(req.query.start) || 1751;
+        var e = parseInt(req.query.end) || 2011;
+        var st = parseInt(req.query.st) || 1751;
+        var et = parseInt(req.query.et) || 2011;
+        var order = req.query.order || 2;
+
+        var originalData = [];
 
         result.forEach(function (c, i) {
             if (c.name == country) {
                 var years = c.years;
-                var countryData = [];
                 years.forEach(function (year, i) {
                     if (year.year && year.year >= s && year.year <= e) {
                         var co2 = 0;
                         if (year.co2 != "") {
                             co2 = year.co2;
                         }
-                        countryData.push({
+                        originalData.push({
                             x: year.year,
                             y: co2
                         });
@@ -60,14 +64,14 @@ app.get('/api/regression', function (req, res) {
                 data.push({
                     key: "Original Values",
                     color: "#009688",
-                    values: countryData,
+                    values: originalData,
                     area: true
                 });
                 dataset = c.years;
             }
         });
 
-        var coefficients = models.polynomialRegression(dataset, req.query.order);
+        var coefficients = models.polynomialRegression(models.filter(dataset, st, et), order);
         var modelData = [];
         for (var i = s; i <= e; i += stepSize) {
             modelData.push({
@@ -107,12 +111,96 @@ app.get('/api/regression', function (req, res) {
                 }
             }
         };
+
+        var errors = models.getError(originalData, modelData);
+
         data.push({
             key: "Regression",
             color: "#FF9800",
             values: modelData,
             area: true
         });
+
+        data.push({
+            key: "Error",
+            color: "#F44336",
+            values: errors,
+            area: true
+        });
+
+        res.json({
+            options: options,
+            data: data
+        });
+    }).catch(function(err) {
+        console.log(err.stack);
+    });
+});
+
+app.get('/api/regression_table', function (req, res) {
+    co(function * () {
+        var data = [];
+        var result = yield getNormalizedData();
+        var dataset = [];
+        var country = req.query.country || "United States";
+        var stepSize = parseInt(req.query.stepsize || 1);
+        var s = parseInt(req.query.start) || 1751;
+        var e = parseInt(req.query.end) || 2011;
+        var st = parseInt(req.query.st) || 1751;
+        var et = parseInt(req.query.et) || 2011;
+
+        var originalData = [];
+
+        result.forEach(function (c, i) {
+            if (c.name == country) {
+                var years = c.years;
+                years.forEach(function (year, i) {
+                    if (year.year && year.year >= s && year.year <= e) {
+                        var co2 = 0;
+                        if (year.co2 != "") {
+                            co2 = year.co2;
+                        }
+                        originalData.push({
+                            x: year.year,
+                            y: co2
+                        });
+                    }
+                });
+                data.push({
+                    key: "Original Values",
+                    color: "#009688",
+                    values: originalData,
+                    area: true
+                });
+                dataset = c.years;
+            }
+        });
+
+        var coefficients = models.polynomialRegression(dataset, req.query.order);
+        var modelData = [];
+        for (var i = s; i <= e; i += stepSize) {
+            modelData.push({
+                x: i,
+                y: models.polynomial(coefficients, i)
+            });
+        }
+
+        var errors = models.getError(originalData, modelData);
+
+        data.push({
+            key: "Regression",
+            color: "#FF9800",
+            values: modelData,
+            area: true
+        });
+
+        data.push({
+            key: "Error",
+            color: "#F44336",
+            values: errors,
+            area: true
+        });
+
         res.json({
             options: options,
             data: data

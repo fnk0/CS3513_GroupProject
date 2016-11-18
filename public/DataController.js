@@ -10,15 +10,9 @@
         function ($http, $scope, $window, $filter, $location, $rootScope, $httpParamSerializer) {
 
             var self = this;
-
-            self.order = 2;
-            self.start = 1751;
-            self.end = 2011;
-            self.stepsize = 1;
-
             self.orders = [];
             self.years = [];
-            for(var i = 2; i < 46; i++) {
+            for(var i = 1; i < 46; i++) {
                 self.orders.push(i);
             }
 
@@ -26,13 +20,22 @@
                 self.years.push(i);
             }
 
+            self.order = 1;
+            self.start = 1751;
+            self.end = 2011;
+            self.stepsize = 1;
+            self.st = 1751;
+            self.et = 2011;
+
             $scope.fetch = function () {
                 var query = {
                     country: "United States",
                     stepsize: self.stepsize,
                     start: self.start,
                     end: self.end,
-                    order: self.order
+                    order: self.order,
+                    st: self.st,
+                    et: self.et
                 };
 
                 $http.get(window._base_url + "/regression?" + $httpParamSerializer(query))

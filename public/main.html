@@ -1,21 +1,58 @@
 <div class="row card-panel chart-card">
     <div class="row">
-        <div input-field class="col s12 m3">
-            <select class="" ng-model="ctrl.order" material-select watch>
-                <option ng-repeat="o in ctrl.orders">{{o}}</option>
-            </select>
+
+        <div input-field class="col s12 m2">
+            <div class="row">
+                <h6>Start Training Year</h6>
+            </div>
+            <div class="row">
+                <select class="" ng-model="ctrl.st" material-select watch
+                        ng-options="year as year for year in ctrl.years">
+                </select>
+            </div>
         </div>
-        <div input-field class="col s12 m3">
-            <select class="" ng-model="ctrl.start" material-select>
-                <option ng-repeat="y in ctrl.years">{{y}}</option>
-            </select>
+        <div input-field class="col s12 m2">
+            <div class="row">
+                <h6>End Training Year</h6>
+            </div>
+            <div class="row">
+                <select class="" ng-model="ctrl.et" material-select watch
+                        ng-options="year as year for year in ctrl.years">
+                </select>
+            </div>
         </div>
-        <div input-field class="col s12 m3">
-            <select class="" ng-model="ctrl.end" material-select>
-                <option ng-repeat="y in ctrl.years">{{y}}</option>
-            </select>
+
+        <div input-field class="col s12 m2">
+            <div class="row">
+                <h6>Order</h6>
+            </div>
+            <div class="row">
+                <select class="" ng-model="ctrl.order" material-select watch
+                        ng-options="order as order for order in ctrl.orders">
+                </select>
+            </div>
         </div>
-        <div class="col s12 m3 right-align">
+        <div input-field class="col s12 m2">
+            <div class="row">
+                <h6>Start Year</h6>
+            </div>
+            <div class="row">
+                <select class="" ng-model="ctrl.start" material-select watch
+                        ng-options="year as year for year in ctrl.years">
+                </select>
+            </div>
+        </div>
+        <div input-field class="col s12 m2">
+            <div class="row">
+                <h6>End Year</h6>
+            </div>
+            <div class="row">
+                <select class="" ng-model="ctrl.end" material-select watch
+                        ng-options="year as year for year in ctrl.years">
+                </select>
+            </div>
+        </div>
+        <div class="col s12 m2 right-align" style="padding-top: 30px;">
             <a class="btn btn-large" href ng-click="fetch()">GO</a>
         </div>
     </div>
