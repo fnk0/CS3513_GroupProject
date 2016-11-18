@@ -40,21 +40,20 @@
 
                 $http.get(window._base_url + "/regression?" + $httpParamSerializer(query))
                     .success(function (data) {
-                        console.log(data);
-                        $scope.options = data.options;
-                        callback(data.data);
-                        console.log(self.chartData);
+                        callback(data.data, data.options);
                     }).error(function (error) {
                         console.log(error);
                     }
                 );
             };
-            $scope.fetch(self.start, self.end, self.st, self.et, self.order, function(data) {
+            $scope.fetch(self.start, self.end, self.st, self.et, self.order, function(data, options) {
                $scope.data = data;
+                $scope.options = data.options;
             });
 
-            $scope.fetch(self.start, self.end, 1900, 1945, self.order, function(data) {
+            $scope.fetch(self.start, self.end, 1900, 1945, self.order, function(data, options) {
                 $scope.data2 = data;
+                $scope.options = data.options;
             });
         }]);
 })();
