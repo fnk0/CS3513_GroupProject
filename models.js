@@ -1,9 +1,12 @@
 var matrix = require('matrix-ops');
 
-var average = function(dataset) {
-	return dataset.reduce(function(average, value){
-		return ((average||0)+value)/2
-	});
+var average = function(dataset, power) {
+    power = power || 1;
+    var squaredSum = dataset.reduce(function(a, b) {
+        return a + Math.pow(b, power);
+    });
+    //return Math.log(squaredSum / dataset.length);
+    return squaredSum / dataset.length;
 };
 
 var polynomial = function (coefficients, x, i, accumulator) {

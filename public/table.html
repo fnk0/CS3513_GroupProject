@@ -49,7 +49,6 @@
 </div>
 
 <div class="row card-panel">
-
     <table class="striped centered">
         <thead>
         <tr>
@@ -57,14 +56,11 @@
             <th ng-repeat="p in ctrl.orders">Order {{ p }}</th>
         </tr>
         </thead>
-
         <tbody>
-
         <tr ng-repeat="point in data">
             <td>{{point.year}}</td>
             <td ng-repeat="p in point.data"> {{ p.v | number: 4}} %</td>
         </tr>
         </tbody>
     </table>
-
 </div>

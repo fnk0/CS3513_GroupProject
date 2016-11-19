@@ -132,12 +132,46 @@ app.get('/api/regression', function (req, res) {
             options: options,
             data: data
         });
-    }).catch(function(err) {
+    }).catch(function (err) {
         console.log(err.stack);
     });
 });
 
-app.get('/api/regression_table', function (req, res) {
+var getRegressionErrors = function (req, res) {
+    var deferred = Q.defer();
+
+    co(function * () {
+        var data = yield getErrorsForRequest(req, true);
+        var result = {};
+        data.forEach(function (v, i) {
+            var values = v.values;
+            values.forEach(function (iv, j) {
+                var year = iv.x;
+                var point = result[year] || {};
+                var data = point.data || [];
+                data.push({
+                    o: v.order,
+                    v: iv.y
+                });
+                result[year] = {
+                    year: year,
+                    data: data
+                };
+            });
+        });
+
+        deferred.resolve(result);
+    }).catch(function (err) {
+        console.log(err.stack);
+        deferred.reject(err);
+    });
+
+    return deferred.promise;
+};
+
+var getErrorsForRequest = function (req, absolute) {
+    var deferred = Q.defer();
+
     co(function * () {
         var data = [];
         var resultData = yield getNormalizedData();
@@ -158,7 +192,7 @@ app.get('/api/regression_table', function (req, res) {
             }
         });
 
-        for(var o = 1; o < 17; o *= 2) {
+        for (var o = 1; o < 17; o *= 2) {
             var coefficients = models.polynomialRegression(models.filter(dataset, trainingStart, trainingEnd), o);
             var modelData = [];
             for (var i = start; i <= end; i += stepSize) {
@@ -167,38 +201,123 @@ app.get('/api/regression_table', function (req, res) {
                     y: models.polynomial(coefficients, i)
                 });
             }
-            var errors = models.getError(originalData, modelData, true);
+            var errors = models.getError(originalData, modelData, absolute);
             data.push({
                 order: o,
                 values: errors
             });
         }
+        deferred.resolve(data);
+    }).catch(function (err) {
+        console.log(err.stack);
+        deferred.reject(err);
+    });
 
-        var result = {};
-        data.forEach(function(v, i) {
-            var values = v.values;
-            values.forEach(function(iv, j) {
-                var year = iv.x;
-                var point = result[year] || {};
-                var data = point.data || [];
-                data.push({
-                    o: v.order,
-                    v: iv.y
-                });
-                result[year] = {
-                    year: year,
-                    data: data
-                };
-            });
-        });
+    return deferred.promise;
+};
 
+app.get('/api/regression_table', function (req, res) {
+    co(function * () {
+        var result = yield getRegressionErrors(req, res);
         res.json({
             data: result
         });
-    }).catch(function(err) {
+
+    }).catch(function (err) {
         console.log(err.stack);
-    });
+    })
 });
+
+app.get("/api/averages", function (req, res) {
+    co(function * () {
+
+        var start = parseInt(req.query.start) || 1751;
+        var end = parseInt(req.query.end) || 2011;
+        var power = req.query.power || 2;
+
+        var data = yield getErrorsForRequest(req, false);
+        var validationData = getAverageForRange(data, start, end, power);
+
+        var trainingStart = parseInt(req.query.st) || 1751;
+        var trainingEnd = parseInt(req.query.et) || 2011;
+        req.query.end = trainingEnd;
+        req.query.start = trainingStart;
+        data = yield getErrorsForRequest(req, false);
+        var trainingData = getAverageForRange(data, trainingStart, trainingEnd, power);
+        req.query.end = end;
+        data = yield getErrorsForRequest(req, false);
+
+
+        var barOptions = {
+            chart: {
+                "type": "multiBarHorizontalChart",
+                "height": 400,
+                "margin": {
+                    "top": 20,
+                    "right": 20,
+                    "bottom": 45,
+                    "left": 45
+                },
+                "clipEdge": true,
+                "duration": 500,
+                "stacked": false,
+                groupSpacing: 0.25,
+                showValues: true,
+                showYAxis: false,
+                "xAxis": {
+                    "axisLabel": "Order",
+                    "showMaxMin": false
+                }
+            }
+        };
+
+        var result = [];
+        result.push({
+            key: "Training Set",
+            color: "#3F51B5",
+            values: trainingData
+        });
+
+        result.push({
+            key: "Validation Set",
+            color: "#009688",
+            values: validationData
+        });
+
+        result.push({
+            key: "Total Set",
+            color: "#FF9800",
+            values: getAverageForRange(data, trainingStart, end, power)
+        });
+
+        res.status(200).json({
+            options: barOptions,
+            data: result
+        });
+    }).catch(function (err) {
+        console.log(err.stack);
+    })
+});
+
+var getAverageForRange = function (dataset, start, end, power) {
+    var result = [];
+    dataset.forEach(function (val, i) {
+        var r = {};
+        r.x = val.order;
+
+        var filtered = val.values.filter(function (obj) {
+            return obj.x >= start && obj.x < end
+        });
+
+        var errors = filtered.map(function (obj) {
+            return obj.y;
+        });
+        //console.log(errors);
+        r.y = models.average(errors, power);
+        result.push(r);
+    });
+    return result;
+};
 
 app.listen(app.get('port'), function () {
     console.log('Server started: http://localhost:' + app.get('port') + '/');

@@ -14,7 +14,7 @@
 
     app.config(function ($httpProvider, $routeProvider, $locationProvider) {
         $routeProvider
-            .when('/', {
+            .when('/charts', {
                 templateUrl: 'main.html',
                 controller: 'DataController',
                 controllerAs: 'ctrl'
@@ -25,7 +25,7 @@
                 controllerAs: 'ctrl'
             })
             .otherwise({
-                redirectTo: '/'
+                redirectTo: '/charts'
             });
     });
 

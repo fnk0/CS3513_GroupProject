@@ -24,4 +24,6 @@ var test = function() {
     });
 };
 
-test();
+//test();
+
+console.log(pol.average([1, 2]));

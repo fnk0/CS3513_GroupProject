@@ -22,19 +22,16 @@
             }
 
             self.order = 1;
-            self.start = 1751;
+            self.start = 1924;
             self.end = 2011;
             self.st = 1751;
-            self.et = 2011;
+            self.et = 1924;
 
             $scope.fetchData = function() {
-                $scope.fetch(self.start, self.end, self.st, self.et, self.order, function(data, options) {
-                    $scope.data = data;
-                    $scope.options = options;
-                });
+                fetch();
             };
 
-            $scope.fetch = function (start, end, st, et, order, callback) {
+            $scope.fetch = function (endpoint, start, end, st, et, order, callback) {
                 var query = {
                     country: "United States",
                     stepsize: 1,
@@ -45,7 +42,7 @@
                     et: et
                 };
 
-                $http.get(window._base_url + "/regression?" + $httpParamSerializer(query))
+                $http.get(window._base_url + "/" + endpoint + "?" + $httpParamSerializer(query))
                     .success(function (data) {
                         callback(data.data, data.options);
                     }).error(function (error) {
@@ -54,14 +51,22 @@
                 );
             };
 
-            $scope.fetch(self.start, self.end, self.st, self.et, self.order, function(data, options) {
-               $scope.data = data;
-                $scope.options = options;
-            });
+            var fetch = function() {
+                $scope.fetch("regression", self.start, self.end, self.st, self.et, self.order, function(data, options) {
+                    $scope.data = data;
+                    $scope.options = options;
+                });
 
-            $scope.fetch(self.start, self.end, 1900, 1945, self.order, function(data, options) {
-                $scope.data2 = data;
-                $scope.options = options;
-            });
+                $scope.fetch("averages", self.start, self.end, self.st, self.et, self.order, function(data, options) {
+                    $scope.data2 = data;
+                    $scope.options2 = options;
+                    $scope.options2.chart.forceY = 1;
+                    $scope.options2.chart.yScale = d3.scale.log();
+                    $scope.options2.yAxis.tickFormat = function(d) {
+                        return null
+                    };
+                });
+            };
+            fetch();
         }]);
 })();
