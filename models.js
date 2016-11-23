@@ -1,14 +1,15 @@
 var matrix = require('matrix-ops');
 
+// Gets the average of a dataset based on a power
 var average = function(dataset, power) {
     power = power || 1;
-    var squaredSum = dataset.reduce(function(a, b) {
+    var powerSum = dataset.reduce(function(a, b) {
         return a + Math.pow(b, power);
     });
-    //return Math.log(squaredSum / dataset.length);
-    return squaredSum / dataset.length;
+    return powerSum / dataset.length;
 };
 
+// Solves a polynomial equation recursively
 var polynomial = function (coefficients, x, i, accumulator) {
     i = i || 0;
     //console.log(i);
@@ -19,6 +20,7 @@ var polynomial = function (coefficients, x, i, accumulator) {
     return polynomial(coefficients, x, i + 1, accumulator);
 };
 
+// Filters a dataset based on start/end position
 var filter = function(dataset, s, e) {
     var newDataset = [];
     dataset.forEach(function(val, index) {
@@ -30,7 +32,7 @@ var filter = function(dataset, s, e) {
 };
 
 //takes the dataset, and function order,
-//returns a list of coefficents
+//returns a list of coefficents using Gaussian matrix elimination
 var polynomialRegression = function (dataset, order) {
     //loop over all points and calculate the all the sums.
     var xsums = [];
@@ -79,6 +81,9 @@ var polynomialRegression = function (dataset, order) {
     return results;
 };
 
+// Get an array of errors with a Year and a error for that specific year
+// The error is calculte using
+// Original - Error / original
 var getError = function (original, estimated, absolute) {
     var errors = [];
 
@@ -96,6 +101,8 @@ var getError = function (original, estimated, absolute) {
     return errors;
 };
 
+// Filters datapoints based on a start/end and puts then into a array of
+// points with x,y values to be ploted
 var getDatapoints = function(dataset, s, e) {
     var data = [];
     dataset.forEach(function (year, i) {
