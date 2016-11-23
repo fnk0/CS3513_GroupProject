@@ -13,7 +13,9 @@ Depending on the data, some models are more effective at plotting accurate resul
 Global emissions of CO2 is a recurring theme in environmental studies. 
 With increasing amounts of CO2 emissions each year, being able to correctly predict trends in global emission rates is critical for environmental scientists. 
 We have chosen to analyse the differences between linear regression, quadratic regression, and higher order polynomial regression. 
-By using this real world dataset we attempt to determine characteristics of these regression models and identify their strengths and weaknesses. 
+By using this real world dataset we attempt to determine characteristics of these regression models and identify their strengths and weaknesses.
+ 
+![pic](https://github.com/fnk0/CS3513_GroupProject/blob/master/screenshot.png?raw=true)
 
 ### Code explanation:
 
@@ -34,4 +36,4 @@ This will serve a local webpage on http://localhost:3000
 
 A live version can also be found on: https://cs3513.herokuapp.com/
 
-
+The interactive website can be used to experiment with different training periods and order polynomials.
