@@ -16,6 +16,7 @@ We have chosen to analyse the differences between linear regression, quadratic r
 By using this real world dataset we attempt to determine characteristics of these regression models and identify their strengths and weaknesses.
  
 ![pic](https://github.com/fnk0/CS3513_GroupProject/blob/master/screenshot.png?raw=true)
+![pic2](https://github.com/fnk0/CS3513_GroupProject/blob/master/screenshot2.png?raw=true)
 
 ### Code explanation:
 
