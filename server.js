@@ -247,7 +247,6 @@ app.get("/api/averages", function (req, res) {
         req.query.end = end;
         data = yield getErrorsForRequest(req, false);
 
-
         var barOptions = {
             chart: {
                 "type": "multiBarHorizontalChart",
